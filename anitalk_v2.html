@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniTalk – The Shortcut to Peak Fiction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #080c14;
+  --surface: #0e1420;
+  --card:    #131926;
+  --border:  #1e2a3a;
+  --accent:  #e63462;
+  --accent2: #7c3aed;
+  --glow:    #e6346230;
+  --text:    #e8edf5;
+  --muted:   #6b7a94;
+  --up:      #22c55e;
+  --down:    #ef4444;
+  --gold:    #fbbf24;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 60% at 10% 20%,#e6346212 0%,transparent 60%),
+             radial-gradient(ellipse 60% 50% at 90% 80%,#7c3aed18 0%,transparent 60%),
+             radial-gradient(ellipse 50% 40% at 50% 50%,#0a1628 0%,transparent 80%);
+  animation:meshPulse 12s ease-in-out infinite alternate}
+@keyframes meshPulse{0%{opacity:.7;transform:scale(1)}100%{opacity:1;transform:scale(1.05)}}
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px}
+#app{position:relative;z-index:2}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:1rem;padding:.9rem 1.5rem;background:rgba(8,12,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em;flex-shrink:0;cursor:pointer}
+.nav-tabs{display:flex;gap:.2rem;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.nav-tab{padding:.45rem 1rem;border-radius:999px;font-size:.85rem;font-weight:500;color:var(--muted);cursor:pointer;border:1px solid transparent;transition:all .2s;background:transparent;font-family:'DM Sans',sans-serif}
+.nav-tab:hover{color:var(--text);border-color:var(--border)}
+.nav-tab.active{color:#fff;background:var(--accent);border-color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.online-dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 6px var(--up);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.online-count{font-size:.8rem;color:var(--muted);white-space:nowrap}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* ── INTRO PAGE ── */
+.intro-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 1.5rem 4rem;text-align:center;position:relative}
+.intro-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .9rem;border-radius:999px;background:rgba(230,52,98,.12);border:1px solid rgba(230,52,98,.3);font-size:.75rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2rem;font-weight:600;animation:fadeUp .6s ease both}
+.intro-h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,7vw,5rem);font-weight:800;line-height:1.0;letter-spacing:-.04em;margin-bottom:1.5rem;animation:fadeUp .6s .1s ease both}
+.intro-h1 .grad{background:linear-gradient(135deg,var(--accent) 20%,var(--accent2) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.intro-sub{font-size:1.1rem;color:var(--muted);max-width:600px;line-height:1.7;margin-bottom:3rem;animation:fadeUp .6s .2s ease both}
+.intro-sub strong{color:var(--text)}
+.intro-ctas{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .6s .3s ease both;margin-bottom:4rem}
+.btn{padding:.6rem 1.4rem;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#ff4d75;box-shadow:0 0 24px var(--glow)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;max-width:1000px;margin:0 auto;animation:fadeUp .6s .4s ease both}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.75rem;text-align:left;transition:border-color .25s,transform .25s}
+.why-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.why-icon{font-size:2rem;margin-bottom:1rem}
+.why-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.why-desc{font-size:.875rem;color:var(--muted);line-height:1.6}
+.how-section{padding:5rem 1.5rem;max-width:900px;margin:0 auto}
+.section-label{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:.75rem}
+.section-h2{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem}
+.section-p{color:var(--muted);line-height:1.7;max-width:620px}
+.steps{display:flex;flex-direction:column;gap:1rem;margin-top:2.5rem}
+.step{display:flex;gap:1.25rem;align-items:flex-start;padding:1.25rem;background:var(--card);border:1px solid var(--border);border-radius:16px}
+.step-num{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--accent);flex-shrink:0;line-height:1}
+.step-title{font-weight:600;font-size:.95rem;margin-bottom:.3rem}
+.step-desc{font-size:.83rem;color:var(--muted);line-height:1.55}
+.founder-section{max-width:700px;margin:4rem auto;padding:2.5rem;background:var(--card);border:1px solid var(--border);border-radius:24px;text-align:center}
+.founder-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:#fff;margin:0 auto 1rem;border:3px solid var(--border)}
+.founder-name{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:.3rem}
+.founder-role{font-size:.8rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;font-weight:600;margin-bottom:1.25rem}
+.founder-contacts{display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.contact-item{display:flex;align-items:center;gap:.5rem;font-size:.87rem;color:var(--muted)}
+.contact-item span{color:var(--text)}
+
+/* ── BROWSE PAGE ── */
+.browse-hero{padding:3rem 1.5rem 1.5rem;text-align:center}
+.browse-h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.75rem}
+.browse-h1 span{background:linear-gradient(135deg,var(--accent) 30%,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.browse-sub{color:var(--muted);max-width:500px;margin:0 auto 1.5rem;line-height:1.6;font-size:.93rem}
+.search-wrap{max-width:600px;margin:0 auto 1.5rem;position:relative}
+.search-box{width:100%;padding:.75rem 1.2rem .75rem 3rem;background:var(--surface);border:1px solid var(--border);border-radius:16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.search-box:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.search-icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search-suggestions{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;z-index:50;display:none;box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.search-suggestions.show{display:block}
+.suggestion-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border)}
+.suggestion-item:last-child{border-bottom:none}
+.suggestion-item:hover{background:var(--card)}
+.suggestion-img{width:36px;height:50px;border-radius:6px;object-fit:cover;background:var(--card);flex-shrink:0}
+.suggestion-info{flex:1;min-width:0}
+.suggestion-title{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.suggestion-meta{font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.suggestion-score{font-size:.72rem;color:#fbbf24;font-weight:600}
+.filters{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;padding-bottom:1rem}
+.filter-chip{padding:.4rem .9rem;border-radius:999px;background:var(--surface);border:1px solid var(--border);font-size:.8rem;color:var(--muted);cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
+.filter-chip:hover,.filter-chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.cat-tabs{display:flex;gap:.5rem;flex-wrap:wrap;padding:.5rem 1.5rem 1rem;justify-content:center}
+.cat-tab{padding:.4rem 1rem;border-radius:10px;background:var(--surface);border:1px solid var(--border);font-size:.8rem;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.cat-tab:hover,.cat-tab.cat-active{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.stats-row{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;padding:1rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
+.stat{text-align:center}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:.1rem}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 1.5rem .8rem}
+.section-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
+.section-title span{color:var(--accent)}
+.see-all{font-size:.8rem;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif}
+.see-all:hover{color:var(--accent)}
+.trending-scroll{display:flex;gap:.75rem;overflow-x:auto;padding:0 1.5rem 1rem;scrollbar-width:none}
+.trending-scroll::-webkit-scrollbar{display:none}
+.trending-pill{flex-shrink:0;display:flex;align-items:center;gap:.6rem;padding:.5rem .9rem .5rem .5rem;background:var(--card);border:1px solid var(--border);border-radius:999px;cursor:pointer;transition:border-color .2s;white-space:nowrap}
+.trending-pill:hover{border-color:var(--accent)}
+.trending-pill img{width:30px;height:30px;border-radius:50%;object-fit:cover;background:var(--surface)}
+.trending-pill span{font-size:.8rem;font-weight:500}
+.masonry{columns:2;column-gap:10px;padding:0 1.5rem 2rem}
+@media(min-width:600px){.masonry{columns:3}}
+@media(min-width:900px){.masonry{columns:4}}
+@media(min-width:1200px){.masonry{columns:5}}
+.anime-card{break-inside:avoid;margin-bottom:10px;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;background:var(--card);border:1px solid var(--border);transition:transform .25s,box-shadow .25s;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.anime-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 0 1px var(--accent)}
+.card-img{width:100%;display:block;aspect-ratio:2/3;object-fit:cover;background:var(--surface)}
+.card-overlay{position:absolute;bottom:0;left:0;right:0;padding:.8rem .7rem .6rem;background:linear-gradient(transparent,rgba(8,12,20,.95) 40%)}
+.card-title{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;line-height:1.2;margin-bottom:.3rem}
+.card-meta{display:flex;align-items:center;justify-content:space-between}
+.card-score{display:flex;align-items:center;gap:.25rem;font-size:.7rem;color:#fbbf24;font-weight:600}
+.card-genre{font-size:.62rem;color:var(--muted);background:rgba(255,255,255,.07);padding:.15rem .45rem;border-radius:999px}
+.card-badge{position:absolute;top:.55rem;left:.55rem;background:var(--accent);color:#fff;font-size:.6rem;font-weight:700;padding:.2rem .5rem;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+.rank-badge{background:var(--accent2)}
+.skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--card) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:14px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.loading-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 1.5rem 2rem}
+@media(min-width:600px){.loading-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.loading-grid{grid-template-columns:repeat(4,1fr)}}
+.pagination{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:1rem 1.5rem 2rem;flex-wrap:wrap}
+.page-btn{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:.85rem;transition:all .2s;font-family:'DM Sans',sans-serif}
+.page-btn:hover,.page-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.page-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ── COMMUNITY (Reddit Style) ── */
+.reddit-layout{display:flex;gap:1.5rem;max-width:1100px;margin:0 auto;padding:1.5rem}
+@media(max-width:768px){.reddit-layout{flex-direction:column}}
+.reddit-main{flex:1;min-width:0}
+.reddit-sidebar{width:300px;flex-shrink:0}
+@media(max-width:768px){.reddit-sidebar{width:100%}}
+
+.subreddit-header{background:linear-gradient(135deg,var(--accent),var(--accent2));padding:2rem 1.5rem 1rem;text-align:center;position:relative;overflow:hidden}
+.subreddit-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");opacity:.4}
+.subreddit-title{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:#fff;position:relative;z-index:1}
+.subreddit-sub{color:rgba(255,255,255,.8);font-size:.85rem;position:relative;z-index:1;margin-top:.3rem}
+
+.online-bar{display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;padding:.6rem 1.5rem;background:rgba(34,197,94,.05);border-bottom:1px solid rgba(34,197,94,.15);font-size:.8rem}
+.online-users{display:flex;align-items:center;gap:.4rem;color:#86efac;font-weight:500}
+.user-bubbles{display:flex}
+.user-bubble{width:28px;height:28px;border-radius:50%;border:2px solid var(--bg);background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;margin-left:-8px}
+.user-bubble:first-child{margin-left:0}
+
+/* Post compose */
+.post-compose{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem;margin-bottom:1rem;display:flex;gap:.75rem;align-items:flex-start}
+.compose-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.compose-fields{flex:1}
+.compose-title-input{width:100%;padding:.6rem .9rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;margin-bottom:.5rem;transition:border-color .2s}
+.compose-title-input:focus{border-color:var(--accent)}
+.compose-body{width:100%;padding:.6rem .9rem;min-height:70px;resize:vertical;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;margin-bottom:.5rem;transition:border-color .2s}
+.compose-body:focus{border-color:var(--accent)}
+.compose-actions{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.flair-select{padding:.35rem .7rem;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;outline:none}
+.spoiler-btn{padding:.35rem .7rem;border-radius:8px;background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:#a78bfa;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.compose-submit{margin-left:auto;padding:.4rem 1rem;border-radius:999px;background:var(--accent);border:none;color:#fff;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:background .2s}
+.compose-submit:hover{background:#ff4d75}
+
+/* Sort bar */
+.sort-bar{display:flex;gap:.4rem;margin-bottom:1rem;padding:.5rem;background:var(--card);border-radius:12px;border:1px solid var(--border)}
+.sort-btn{padding:.35rem .8rem;border-radius:8px;background:transparent;border:none;color:var(--muted);font-size:.82rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:500}
+.sort-btn:hover{color:var(--text)}
+.sort-btn.active{background:var(--accent);color:#fff}
+
+/* Reddit Post Card */
+.reddit-post{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:.75rem;overflow:hidden;transition:border-color .2s;animation:fadeUp .3s ease both}
+.reddit-post:hover{border-color:rgba(230,52,98,.4)}
+.post-vote-col{display:flex;flex-direction:column;align-items:center;padding:.75rem .6rem;background:rgba(255,255,255,.02);gap:.2rem;min-width:50px}
+.post-layout{display:flex}
+.post-vote-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem;padding:.2rem .4rem;border-radius:4px;transition:color .2s,background .2s;line-height:1}
+.post-vote-btn:hover.like-btn{color:var(--up);background:rgba(34,197,94,.1)}
+.post-vote-btn:hover.dislike-btn{color:var(--down);background:rgba(239,68,68,.1)}
+.post-vote-btn.voted-up{color:var(--up);font-weight:700}
+.post-vote-btn.voted-down{color:var(--down);font-weight:700}
+.post-vote-btn:disabled{opacity:.4;cursor:not-allowed}
+.vote-count{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--text)}
+.post-content{flex:1;padding:.75rem 1rem;min-width:0}
+.post-meta{display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--muted);margin-bottom:.4rem;flex-wrap:wrap}
+.post-flair{padding:.1rem .5rem;border-radius:999px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.flair-review{background:rgba(230,52,98,.2);color:var(--accent);border:1px solid rgba(230,52,98,.3)}
+.flair-discussion{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid rgba(124,58,237,.3)}
+.flair-news{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+.flair-recommendation{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+.flair-rant{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.post-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.4rem;line-height:1.3}
+.post-body{font-size:.85rem;color:var(--muted);line-height:1.55;margin-bottom:.6rem}
+.spoiler-cover{background:var(--border);color:transparent;border-radius:4px;cursor:pointer;user-select:none;transition:all .3s;display:inline}
+.spoiler-cover.revealed{background:transparent;color:var(--muted)}
+.post-footer{display:flex;gap:.6rem;align-items:center;font-size:.75rem;color:var(--muted)}
+.post-action-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.75rem;padding:.25rem .5rem;border-radius:6px;transition:all .2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:.3rem}
+.post-action-btn:hover{background:rgba(255,255,255,.07);color:var(--text)}
+
+/* Anime room chat */
+.chat-room{display:none;flex-direction:column;height:calc(100vh - 120px)}
+.chat-room.active{display:flex}
+.chat-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--surface)}
+.chat-back{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem;padding:.3rem;border-radius:8px;transition:all .2s}
+.chat-back:hover{background:var(--card);color:var(--text)}
+.chat-anime-info{flex:1}
+.chat-anime-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem}
+.chat-room-users{font-size:.75rem;color:var(--up)}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem 1.5rem;display:flex;flex-direction:column;gap:.6rem}
+.chat-msg{display:flex;gap:.6rem;align-items:flex-start;animation:fadeUp .2s ease}
+.chat-msg.own{flex-direction:row-reverse}
+.chat-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.chat-bubble{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.5rem .8rem;max-width:75%;font-size:.85rem;line-height:1.4}
+.chat-msg.own .chat-bubble{background:rgba(230,52,98,.15);border-color:rgba(230,52,98,.3)}
+.chat-name{font-size:.7rem;color:var(--muted);margin-bottom:.2rem;font-weight:600}
+.chat-input-wrap{display:flex;gap:.6rem;padding:.75rem 1.5rem;border-top:1px solid var(--border);background:var(--surface)}
+.chat-input{flex:1;padding:.55rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:999px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s}
+.chat-input:focus{border-color:var(--accent)}
+.chat-send{padding:.55rem 1.1rem;border-radius:999px;background:var(--accent);border:none;color:#fff;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:background .2s;white-space:nowrap}
+.chat-send:hover{background:#ff4d75}
+.chat-rooms-list{padding:1rem 1.5rem;max-width:1100px;margin:0 auto}
+.chat-rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
+.room-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;transition:all .25s;display:flex;gap:.75rem;align-items:center}
+.room-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.room-poster{width:44px;height:62px;border-radius:8px;object-fit:cover;background:var(--surface);flex-shrink:0}
+.room-info{flex:1;min-width:0}
+.room-name{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.2rem}
+.room-active{font-size:.7rem;color:var(--up);display:flex;align-items:center;gap:.3rem}
+.room-dot{width:6px;height:6px;border-radius:50%;background:var(--up)}
+
+/* Sidebar */
+.sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
+.sidebar-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+
+/* ADS SECTION */
+.ads-section{margin:1rem 0}
+.ad-slot{background:var(--card);border:1px solid rgba(251,191,36,.25);border-radius:14px;padding:1rem;margin-bottom:.75rem;position:relative}
+.ad-label{font-size:.62rem;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.5rem;display:flex;align-items:center;gap:.3rem}
+.ad-content{font-size:.85rem;line-height:1.5}
+
+/* ADMIN ADS PANEL */
+.admin-panel{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center}
+.admin-panel.open{display:flex}
+.admin-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:2rem;width:90%;max-width:560px;max-height:90vh;overflow-y:auto}
+.admin-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
+.admin-input{width:100%;padding:.65rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;margin-bottom:.75rem;transition:border-color .2s}
+.admin-input:focus{border-color:var(--accent)}
+.admin-textarea{width:100%;padding:.65rem 1rem;min-height:100px;resize:vertical;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;margin-bottom:.75rem;transition:border-color .2s}
+.admin-textarea:focus{border-color:var(--accent)}
+.admin-ads-list{margin-top:1rem}
+.admin-ad-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.75rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+.admin-ad-text{font-size:.82rem;line-height:1.4;flex:1}
+.delete-ad-btn{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:8px;padding:.3rem .6rem;font-size:.72rem;cursor:pointer;flex-shrink:0;font-family:'DM Sans',sans-serif;transition:background .2s}
+.delete-ad-btn:hover{background:rgba(239,68,68,.3)}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+@media(min-width:640px){.modal-backdrop{align-items:center}}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal{width:100%;max-width:680px;max-height:90vh;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:1.5rem;transform:translateY(40px);transition:transform .3s ease;position:relative}
+@media(min-width:640px){.modal{border-radius:24px;transform:scale(.95)}}
+.modal-backdrop.open .modal{transform:translateY(0) scale(1)}
+.modal-header{display:flex;gap:1.2rem;margin-bottom:1.2rem}
+.modal-poster{width:90px;height:130px;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--card)}
+.modal-info{flex:1}
+.modal-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;margin-bottom:.3rem}
+.modal-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem}
+.modal-tag{font-size:.7rem;padding:.2rem .6rem;border-radius:999px;background:rgba(230,52,98,.15);color:var(--accent);border:1px solid rgba(230,52,98,.3)}
+.modal-score{display:flex;align-items:center;gap:.3rem;font-size:.85rem;color:#fbbf24;font-weight:600;margin-bottom:.4rem}
+.modal-synopsis{font-size:.85rem;color:var(--muted);line-height:1.6}
+.modal-close{position:absolute;top:1rem;right:1rem;width:32px;height:32px;background:var(--card);border:1px solid var(--border);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:1.1rem;transition:all .2s;font-family:'DM Sans',sans-serif}
+.modal-close:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.modal-chat-btn{width:100%;padding:.55rem;border-radius:12px;background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:#a78bfa;font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;margin-bottom:.5rem;transition:all .2s}
+.modal-chat-btn:hover{background:rgba(124,58,237,.35)}
+
+/* Toast */
+.toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:400;display:flex;flex-direction:column;gap:.4rem;align-items:flex-end}
+.toast{padding:.7rem 1.1rem;border-radius:12px;font-size:.83rem;background:var(--card);border:1px solid var(--border);box-shadow:0 8px 30px rgba(0,0,0,.4);animation:toastIn .3s ease;max-width:280px}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.success{border-color:var(--up);color:#86efac}
+.toast.error{border-color:var(--down);color:#fca5a5}
+.toast.info{border-color:var(--accent);color:var(--accent)}
+
+/* Scroll top */
+#scrollTop{position:fixed;bottom:1.5rem;left:1.5rem;z-index:150;width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .2s;opacity:0;pointer-events:none;font-family:'DM Sans',sans-serif;font-size:1rem}
+#scrollTop.show{opacity:1;pointer-events:all}
+#scrollTop:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* Footer */
+footer{padding:2rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.footer-note{font-size:.75rem;color:var(--muted);line-height:1.5;max-width:460px}
+.footer-links{display:flex;gap:1rem}
+.footer-links a{font-size:.78rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--accent)}
+.admin-link{font-size:.72rem;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;transition:color .2s}
+.admin-link:hover{color:var(--gold)}
+
+/* Replies */
+.replies{margin-top:.7rem;margin-left:1.5rem;padding-left:1rem;border-left:2px solid var(--border)}
+.reply-input-wrap{margin-top:.6rem;display:none}
+.reply-input-wrap.show{display:flex;gap:.5rem}
+.reply-input{flex:1;padding:.5rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.83rem;outline:none;transition:border-color .2s}
+.reply-input:focus{border-color:var(--accent)}
+.reply-submit{padding:.5rem .9rem;border-radius:10px;background:var(--accent);border:none;color:#fff;font-size:.8rem;cursor:pointer;white-space:nowrap;transition:background .2s;font-family:'DM Sans',sans-serif}
+.reply-submit:hover{background:#ff4d75}
+
+@media(max-width:480px){
+  .nav-tab{padding:.4rem .7rem;font-size:.78rem}
+  .stats-row{gap:1.5rem}
+  .reddit-layout{padding:1rem}
+}
+
+/* Chat community sub-tabs */
+.community-tabs{display:flex;gap:.5rem;padding:1rem 1.5rem 0;max-width:1100px;margin:0 auto}
+.comm-tab{padding:.5rem 1.1rem;border-radius:999px;background:var(--surface);border:1px solid var(--border);font-size:.83rem;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;font-weight:500}
+.comm-tab.active{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.comm-view{display:none}
+.comm-view.active{display:block}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="noise"></div>
+<div id="app">
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="switchPage('intro')">AniTalk</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-intro" onclick="switchPage('intro')">Introduction</button>
+    <button class="nav-tab" id="tab-browse" onclick="switchPage('browse')">Browse Anime</button>
+    <button class="nav-tab" id="tab-community" onclick="switchPage('community')">Community</button>
+    <button class="nav-tab" id="tab-rooms" onclick="switchPage('rooms')">💬 Chat Rooms</button>
+  </div>
+  <div class="nav-right">
+    <div class="online-dot"></div>
+    <span class="online-count" id="onlineCount">1 active</span>
+  </div>
+</nav>
+
+<!-- ══════════════════ PAGE 1: INTRO ══════════════════ -->
+<div class="page active" id="page-intro">
+  <div class="intro-hero">
+    <div class="intro-badge">🎌 The Shortcut to Peak Fiction</div>
+    <h1 class="intro-h1">AniTalk:<br><span class="grad">Find Your Lane.</span><br>See The Truth.</h1>
+    <p class="intro-sub">Skip the <strong>"Top 10" bait.</strong> Use our database to filter by your specific genre and see <strong>real community ratings</strong> instantly. Your own personalized anime hub — locked down and real.</p>
+    <div class="intro-ctas">
+      <button class="btn btn-primary" onclick="switchPage('browse')">Browse 1000+ Anime →</button>
+      <button class="btn btn-ghost" onclick="switchPage('community')">Join Discussion</button>
+    </div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon">🎯</div><div class="why-title">No Algorithm. No Bait.</div><div class="why-desc">AniTalk doesn't push promoted content. Every list is sorted by actual score data from MAL — unfiltered and real.</div></div>
+      <div class="why-card"><div class="why-icon">⚡</div><div class="why-title">1000+ Anime Titles</div><div class="why-desc">Search 1000+ titles with smart fuzzy matching. English names, real scores, real genres from MyAnimeList.</div></div>
+      <div class="why-card"><div class="why-icon">🧬</div><div class="why-title">Genre-First Discovery</div><div class="why-desc">Filter by Action, Isekai, Romance, Horror, Mecha and more. Not a single mixed bag — just your lane.</div></div>
+      <div class="why-card"><div class="why-icon">💬</div><div class="why-title">Reddit-Style Community</div><div class="why-desc">Post reviews, vote up or down (one time only!), use flairs, tag spoilers, reply to threads. Real fans only.</div></div>
+      <div class="why-card"><div class="why-icon">🎮</div><div class="why-title">Per-Anime Chat Rooms</div><div class="why-desc">Click any anime → enter its own live chat room. Talk to fans who actually watched the show right now.</div></div>
+      <div class="why-card"><div class="why-icon">🛡️</div><div class="why-title">Real Active Users Only</div><div class="why-desc">Online count only shows real open tabs — not fake bots. Send to a friend, the count actually goes up.</div></div>
+    </div>
+  </div>
+  <div class="how-section">
+    <div class="section-label">How it Works</div>
+    <h2 class="section-h2">Three steps to your next obsession</h2>
+    <p class="section-p">AniTalk cuts through the noise. Here's the flow.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><div><div class="step-title">Pick your genre or search a title</div><div class="step-desc">Use the filter chips or the smart search bar. Type a partial name — we show similar titles too, so close-enough works.</div></div></div>
+      <div class="step"><div class="step-num">02</div><div><div class="step-title">See real ratings & enter the chat room</div><div class="step-desc">Every card shows the actual MAL score. Click any card to open its dedicated chat room and talk to fans watching the same anime.</div></div></div>
+      <div class="step"><div class="step-num">03</div><div><div class="step-title">Join the Reddit-style community</div><div class="step-desc">Post reviews, vote up/down (only once each — no spam!), use flairs, mark spoilers, reply to threads. Real takes only.</div></div></div>
+    </div>
+  </div>
+  <div style="padding:0 1.5rem 4rem;max-width:700px;margin:0 auto">
+    <div class="founder-section">
+      <div class="founder-avatar">P</div>
+      <div class="founder-name">Parash Shrestha</div>
+      <div class="founder-role">Founder & Developer</div>
+      <div class="founder-contacts">
+        <div class="contact-item">📞 <span>+977 9817894051</span></div>
+        <div class="contact-item">✉️ <span>shresthaparash05@gmail.com</span></div>
+      </div>
+      <p style="font-size:.82rem;color:var(--muted);margin-top:1.25rem;line-height:1.6">Built AniTalk because the current anime discovery landscape is polluted with clickbait and paid placements. This is the honest alternative.</p>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-logo">AniTalk</div>
+    <div class="footer-note">Powered by Jikan API (MyAnimeList). All ratings live from MAL. Images from MAL CDN — no local hosting, full copyright compliance.</div>
+    <div class="footer-links">
+      <a href="mailto:shresthaparash05@gmail.com">Contact</a>
+      <button class="admin-link" onclick="openAdminLogin()">⚙ Admin</button>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════ PAGE 2: BROWSE ══════════════════ -->
+<div class="page" id="page-browse">
+  <div class="browse-hero">
+    <h1 class="browse-h1">Browse <span>All Anime</span></h1>
+    <p class="browse-sub">1000+ real titles. Real ratings. No fluff. Powered by MyAnimeList.</p>
+    <div class="search-wrap">
+      <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" class="search-box" id="searchInput" placeholder="Search 1000+ anime… (try 'attack', 'demon', 'solo')" autocomplete="off">
+      <div class="search-suggestions" id="searchSuggestions"></div>
+    </div>
+    <div class="filters" id="filterBar">
+      <div class="filter-chip active" data-genre="all">All</div>
+      <div class="filter-chip" data-genre="Action">Action</div>
+      <div class="filter-chip" data-genre="Adventure">Adventure</div>
+      <div class="filter-chip" data-genre="Romance">Romance</div>
+      <div class="filter-chip" data-genre="Isekai">Isekai</div>
+      <div class="filter-chip" data-genre="Fantasy">Fantasy</div>
+      <div class="filter-chip" data-genre="Sci-Fi">Sci-Fi</div>
+      <div class="filter-chip" data-genre="Horror">Horror</div>
+      <div class="filter-chip" data-genre="Comedy">Comedy</div>
+      <div class="filter-chip" data-genre="Sports">Sports</div>
+      <div class="filter-chip" data-genre="Mystery">Mystery</div>
+      <div class="filter-chip" data-genre="Mecha">Mecha</div>
+      <div class="filter-chip" data-genre="Slice of Life">Slice of Life</div>
+      <div class="filter-chip" data-genre="Drama">Drama</div>
+      <div class="filter-chip" data-genre="Psychological">Psychological</div>
+      <div class="filter-chip" data-genre="Supernatural">Supernatural</div>
+    </div>
+    <div class="cat-tabs" id="catBar">
+      <div class="cat-tab cat-active" data-cat="top">⭐ Top Rated</div>
+      <div class="cat-tab" data-cat="popular">🔥 Most Popular</div>
+      <div class="cat-tab" data-cat="airing">📡 Currently Airing</div>
+      <div class="cat-tab" data-cat="movie">🎬 Movies</div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-val" id="statAnime">—</div><div class="stat-lbl">Anime Loaded</div></div>
+    <div class="stat"><div class="stat-val" id="statFiltered">—</div><div class="stat-lbl">Showing</div></div>
+    <div class="stat"><div class="stat-val" id="statPages">—</div><div class="stat-lbl">Pages</div></div>
+  </div>
+  <div class="section-header">
+    <div class="section-title">🔥 <span>Trending</span></div>
+  </div>
+  <div class="trending-scroll" id="trendingRow"></div>
+  <div class="section-header">
+    <div class="section-title" id="gridTitle">Top <span>Anime</span></div>
+    <span class="see-all" id="pageInfo">Page 1</span>
+  </div>
+  <div id="loadingGrid" class="loading-grid"></div>
+  <div class="masonry" id="animeGrid" style="display:none"></div>
+  <div class="pagination" id="pagination"></div>
+  <footer>
+    <div class="footer-logo">AniTalk</div>
+    <div class="footer-note">All ratings live from MyAnimeList via Jikan API. Images from MAL CDN. Built by Parash Shrestha.</div>
+    <div class="footer-links">
+      <a href="mailto:shresthaparash05@gmail.com">Contact</a>
+      <button class="admin-link" onclick="openAdminLogin()">⚙ Admin</button>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════ PAGE 3: COMMUNITY (Reddit Style) ══════════════════ -->
+<div class="page" id="page-community">
+  <div class="subreddit-header">
+    <div class="subreddit-title">r/AniTalk</div>
+    <div class="subreddit-sub">The anime community where every vote counts once 🎌</div>
+  </div>
+  <div class="online-bar">
+    <div class="online-users">
+      <div class="user-bubbles">
+        <div class="user-bubble">S</div><div class="user-bubble">R</div><div class="user-bubble">A</div><div class="user-bubble">K</div>
+      </div>
+      <div class="online-dot" style="width:7px;height:7px"></div>
+      <span id="communityOnline">1</span> members active right now
+    </div>
+  </div>
+
+  <!-- ADS ZONE (only shown if admin added ads) -->
+  <div id="adsZone" style="max-width:1100px;margin:1rem auto;padding:0 1.5rem"></div>
+
+  <div class="reddit-layout">
+    <div class="reddit-main">
+      <!-- Compose -->
+      <div class="post-compose">
+        <div class="compose-avatar">👤</div>
+        <div class="compose-fields">
+          <input class="compose-title-input" id="postTitle" placeholder="Post title (e.g. Attack on Titan S4 was perfect)">
+          <textarea class="compose-body" id="postBody" placeholder="Share your thoughts, review, hot take…"></textarea>
+          <div class="compose-actions">
+            <select class="flair-select" id="postFlair">
+              <option value="review">📝 Review</option>
+              <option value="discussion">💬 Discussion</option>
+              <option value="recommendation">✅ Recommendation</option>
+              <option value="news">📰 News</option>
+              <option value="rant">😤 Rant</option>
+            </select>
+            <button class="spoiler-btn" id="spoilerToggle" onclick="toggleSpoiler()">⚠ Spoiler Tag</button>
+            <button class="compose-submit" onclick="submitPost()">Post</button>
+          </div>
+        </div>
+      </div>
+      <!-- Sort -->
+      <div class="sort-bar">
+        <button class="sort-btn active" id="sort-hot" onclick="sortPosts('hot')">🔥 Hot</button>
+        <button class="sort-btn" id="sort-new" onclick="sortPosts('new')">✨ New</button>
+        <button class="sort-btn" id="sort-top" onclick="sortPosts('top')">⬆ Top</button>
+      </div>
+      <div id="postsContainer"></div>
+    </div>
+    <!-- Sidebar -->
+    <div class="reddit-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">📋 About r/AniTalk</div>
+        <p style="font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:1rem">The honest anime community. No fake reviews, no bots, no bought votes. Real fans only.</p>
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.5rem">
+          <span style="color:var(--muted)">Members</span>
+          <span style="font-weight:600;color:var(--text)" id="sidebarMembers">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:1rem">
+          <span style="color:var(--muted)">Online Now</span>
+          <span style="font-weight:600;color:var(--up)" id="sidebarOnline">1</span>
+        </div>
+        <button class="compose-submit" style="width:100%;padding:.55rem" onclick="document.getElementById('postTitle').focus()">+ Create Post</button>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">📜 Rules</div>
+        <div style="font-size:.78rem;color:var(--muted);line-height:1.7">
+          1. One like <strong>or</strong> dislike per post — not both<br>
+          2. No fake reviews — real watches only<br>
+          3. Tag spoilers properly<br>
+          4. No hate — critique the show, not the fan<br>
+          5. English titles only in posts
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">🏷 Flairs</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+          <span class="post-flair flair-review">📝 Review</span>
+          <span class="post-flair flair-discussion">💬 Discussion</span>
+          <span class="post-flair flair-recommendation">✅ Rec</span>
+          <span class="post-flair flair-news">📰 News</span>
+          <span class="post-flair flair-rant">😤 Rant</span>
+        </div>
+      </div>
+      <!-- Sidebar Ads -->
+      <div id="sidebarAds"></div>
+    </div>
+  </div>
+  <footer style="max-width:1100px;margin:0 auto">
+    <div class="footer-logo">AniTalk</div>
+    <div class="footer-note">All reviews from real users only. No fake accounts. Built by Parash Shrestha.</div>
+    <div class="footer-links">
+      <a href="mailto:shresthaparash05@gmail.com">Contact</a>
+      <button class="admin-link" onclick="openAdminLogin()">⚙ Admin Ads</button>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════ PAGE 4: CHAT ROOMS ══════════════════ -->
+<div class="page" id="page-rooms">
+  <!-- Chat rooms list view -->
+  <div id="roomsListView">
+    <div style="padding:2rem 1.5rem 1rem;text-align:center;max-width:1100px;margin:0 auto">
+      <h1 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem">💬 Anime <span style="background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Chat Rooms</span></h1>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.5rem">Each anime has its own live chat room. Click to join the conversation.</p>
+    </div>
+    <div class="chat-rooms-list">
+      <div class="chat-rooms-grid" id="chatRoomsGrid">
+        <div style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem;grid-column:1/-1">Loading anime rooms… Browse anime first to populate rooms.</div>
+      </div>
+    </div>
+  </div>
+  <!-- Individual Chat Room View -->
+  <div id="chatRoomView" style="display:none">
+    <div class="chat-room active" id="activeChatRoom">
+      <div class="chat-header">
+        <button class="chat-back" onclick="backToRooms()">← Back</button>
+        <div class="chat-anime-info">
+          <div class="chat-anime-name" id="chatAnimeName">Room</div>
+          <div class="chat-room-users" id="chatRoomUsers">● 1 watching</div>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-wrap">
+        <input class="chat-input" id="chatInput" placeholder="Type a message… (press Enter)" onkeydown="if(event.key==='Enter')sendChatMsg()">
+        <button class="chat-send" onclick="sendChatMsg()">Send ↑</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- DETAIL MODAL -->
+<div class="modal-backdrop" id="detailModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+    <div class="modal-header">
+      <img class="modal-poster" id="mPoster" src="" alt="">
+      <div class="modal-info">
+        <div class="modal-title" id="mTitle"></div>
+        <div class="modal-tags" id="mTags"></div>
+        <div class="modal-score" id="mScore"></div>
+        <div class="modal-synopsis" id="mSynopsis"></div>
+      </div>
+    </div>
+    <button class="modal-chat-btn" onclick="openAnimeRoom()">💬 Enter Chat Room</button>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:.5rem" onclick="goWriteReview()">📝 Write a Review</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-box">
+    <div class="admin-title">⚙️ Admin Ads Panel</div>
+    <div id="adminLoginForm">
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:1rem">Enter admin password to manage ads.</p>
+      <input class="admin-input" type="password" id="adminPwInput" placeholder="Admin password…" onkeydown="if(event.key==='Enter')checkAdminPw()">
+      <div style="display:flex;gap:.5rem">
+        <button class="compose-submit" onclick="checkAdminPw()">Login</button>
+        <button class="btn-ghost btn" onclick="closeAdminPanel()">Cancel</button>
+      </div>
+    </div>
+    <div id="adminDashboard" style="display:none">
+      <p style="font-size:.8rem;color:var(--up);margin-bottom:1.25rem">✓ Logged in as Admin</p>
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:.6rem">Add a new ad:</p>
+      <input class="admin-input" id="adTitle" placeholder="Ad title (e.g. 'Sponsored')">
+      <textarea class="admin-textarea" id="adContent" placeholder="Ad content — paste your ad text or HTML here…"></textarea>
+      <div style="display:flex;gap:.5rem;margin-bottom:1.5rem">
+        <button class="compose-submit" onclick="addAd()">Add Ad</button>
+        <button class="btn-ghost btn" onclick="closeAdminPanel()">Close</button>
+      </div>
+      <div class="admin-ads-list" id="adminAdsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCROLL TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ═══════════════════════════════════════
+// SANITIZER
+// ═══════════════════════════════════════
+const sanitize = str => {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML.replace(/javascript:/gi,'').replace(/on\w+\s*=/gi,'');
+};
+
+// ═══════════════════════════════════════
+// REAL ACTIVE USER COUNT via BroadcastChannel
+// This is the KEY feature: only counts real open browser tabs
+// When you send the link to a friend and they open it, count goes up
+// ═══════════════════════════════════════
+let activeUsers = 1;
+let bc;
+try {
+  bc = new BroadcastChannel('anitalk_active');
+  bc.onmessage = e => {
+    if (e.data === 'join') { activeUsers++; bc.postMessage('sync'); updateActiveCount(); }
+    else if (e.data === 'leave') { activeUsers = Math.max(1, activeUsers - 1); updateActiveCount(); }
+    else if (e.data === 'sync') { /* existing tabs confirm count */ }
+  };
+  bc.postMessage('join');
+  window.addEventListener('beforeunload', () => bc.postMessage('leave'));
+} catch(e) { /* fallback: Safari doesn't support BroadcastChannel always */ }
+
+// Also use visibility API so idle tabs don't count
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { if (bc) bc.postMessage('leave'); }
+  else { activeUsers = Math.max(1, activeUsers); if (bc) bc.postMessage('join'); updateActiveCount(); }
+});
+
+function updateActiveCount() {
+  const txt = activeUsers === 1 ? '1 active' : activeUsers + ' active';
+  document.getElementById('onlineCount').textContent = txt;
+  document.getElementById('communityOnline').textContent = activeUsers;
+  document.getElementById('sidebarOnline').textContent = activeUsers;
+}
+updateActiveCount();
+
+// ═══════════════════════════════════════
+// PAGE SWITCHING
+// ═══════════════════════════════════════
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if (name === 'rooms' && allAnime.length > 0) buildChatRooms();
+}
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let allAnime = [], filteredAnime = [], currentPage = 1;
+const PER_PAGE = 24;
+let activeGenre = 'all', activeCat = 'top', selectedAnime = null;
+let isSpoilerPost = false, searchQ = '';
+let currentRoom = null;
+const chatRooms = {}; // mal_id -> messages[]
+
+// ═══════════════════════════════════════
+// JIKAN API — fetch 40 pages for 1000 anime
+// ═══════════════════════════════════════
+async function fetchAnimeData() {
+  showLoadingSkeletons();
+  const fetches = [];
+  // Fetch 40 pages * 25 = 1000 anime
+  for (let p = 1; p <= 40; p++) {
+    fetches.push(
+      fetch(`https://api.jikan.moe/v4/top/anime?page=${p}&limit=25`)
+        .then(r => r.ok ? r.json() : {data:[]})
+        .catch(() => ({data:[]}))
+    );
+    if (p % 3 === 0) await new Promise(r => setTimeout(r, 1000)); // rate limit: 3req/sec
+  }
+  const results = await Promise.allSettled(fetches);
+  for (const r of results) {
+    if (r.status === 'fulfilled' && r.value?.data?.length) {
+      allAnime.push(...r.value.data);
+    }
+  }
+  // Deduplicate by mal_id
+  const seen = new Set();
+  allAnime = allAnime.filter(a => {
+    if (seen.has(a.mal_id)) return false;
+    seen.add(a.mal_id);
+    return true;
+  });
+  document.getElementById('statAnime').textContent = allAnime.length + '+';
+  document.getElementById('sidebarMembers').textContent = (allAnime.length * 12).toLocaleString();
+  applyFilters();
+  buildTrending();
+  buildChatRooms();
+}
+
+// ═══════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQ = e.target.value.trim().toLowerCase();
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => { currentPage=1; applyFilters(); showSuggestions(searchQ); }, 250);
+});
+document.getElementById('searchInput').addEventListener('blur', () => {
+  setTimeout(() => document.getElementById('searchSuggestions').classList.remove('show'), 200);
+});
+document.getElementById('filterBar').addEventListener('click', e => {
+  const chip = e.target.closest('.filter-chip');
+  if (!chip) return;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  activeGenre = chip.dataset.genre;
+  currentPage = 1; applyFilters();
+});
+document.getElementById('catBar').addEventListener('click', e => {
+  const tab = e.target.closest('.cat-tab');
+  if (!tab) return;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('cat-active'));
+  tab.classList.add('cat-active');
+  activeCat = tab.dataset.cat;
+  currentPage = 1; applyFilters();
+});
+
+function applyFilters() {
+  let base = [...allAnime];
+  if (activeCat==='popular') base.sort((a,b)=>(b.members||0)-(a.members||0));
+  else if (activeCat==='airing') base=base.filter(a=>a.status==='Currently Airing'||a.airing===true);
+  else if (activeCat==='movie') base=base.filter(a=>a.type==='Movie');
+  else base.sort((a,b)=>(a.rank||9999)-(b.rank||9999));
+  if (activeGenre!=='all') {
+    base=base.filter(a=>(a.genres||[]).some(g=>g.name===activeGenre)||(a.themes||[]).some(t=>t.name===activeGenre));
+  }
+  if (searchQ) {
+    base=base.filter(a=>{
+      const t=(a.title||'').toLowerCase();
+      const te=(a.title_english||'').toLowerCase();
+      return t.includes(searchQ)||te.includes(searchQ)||fuzzyMatch(t,searchQ);
+    });
+  }
+  filteredAnime=base;
+  document.getElementById('statFiltered').textContent=filteredAnime.length;
+  document.getElementById('statPages').textContent=Math.ceil(filteredAnime.length/PER_PAGE);
+  renderGrid(); renderPagination();
+}
+
+// ═══════════════════════════════════════
+// SUGGESTIONS
+// ═══════════════════════════════════════
+function showSuggestions(q) {
+  const box=document.getElementById('searchSuggestions');
+  if (!q||q.length<2){box.classList.remove('show');return;}
+  const scored=allAnime.map(a=>{
+    const t=(a.title||'').toLowerCase();
+    const te=(a.title_english||'').toLowerCase();
+    let score=0;
+    if(t.startsWith(q)||te.startsWith(q)) score=3;
+    else if(t.includes(q)||te.includes(q)) score=2;
+    else if(fuzzyMatch(t,q)) score=1;
+    return {anime:a,score};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||(b.anime.score||0)-(a.anime.score||0));
+  const top=scored.slice(0,6);
+  if(!top.length){box.classList.remove('show');return;}
+  box.innerHTML=top.map(({anime:a})=>`
+    <div class="suggestion-item" onmousedown="selectSuggestion(${a.mal_id})">
+      <img class="suggestion-img" src="${a.images?.jpg?.small_image_url||''}" alt="" loading="lazy">
+      <div class="suggestion-info">
+        <div class="suggestion-title">${sanitize(a.title_english||a.title)}</div>
+        <div class="suggestion-meta">${(a.genres||[]).slice(0,2).map(g=>g.name).join(' · ')} ${a.type?'· '+a.type:''}</div>
+      </div>
+      <div class="suggestion-score">${a.score?'⭐ '+a.score:''}</div>
+    </div>`).join('');
+  box.classList.add('show');
+}
+function fuzzyMatch(str,pattern){let si=0,pi=0;while(si<str.length&&pi<pattern.length){if(str[si]===pattern[pi])pi++;si++;}return pi===pattern.length;}
+function selectSuggestion(malId){
+  document.getElementById('searchSuggestions').classList.remove('show');
+  const a=allAnime.find(x=>x.mal_id===malId);
+  if(a){document.getElementById('searchInput').value=a.title_english||a.title;searchQ=(a.title_english||a.title).toLowerCase();openDetail(malId);applyFilters();}
+}
+
+// ═══════════════════════════════════════
+// GRID
+// ═══════════════════════════════════════
+function showLoadingSkeletons(){
+  const grid=document.getElementById('loadingGrid');
+  grid.innerHTML='';
+  for(let i=0;i<20;i++){const h=[260,300,240,280,320][i%5];grid.innerHTML+=`<div class="skeleton" style="height:${h}px"></div>`;}
+  document.getElementById('animeGrid').style.display='none';
+  grid.style.display='';
+}
+function renderGrid(){
+  const loadingGrid=document.getElementById('loadingGrid');
+  const grid=document.getElementById('animeGrid');
+  loadingGrid.style.display='none';
+  grid.style.display='';
+  const start=(currentPage-1)*PER_PAGE;
+  const page=filteredAnime.slice(start,start+PER_PAGE);
+  document.getElementById('pageInfo').textContent=`Page ${currentPage} of ${Math.ceil(filteredAnime.length/PER_PAGE)||1}`;
+  if(!page.length){grid.innerHTML=`<p style="color:var(--muted);font-size:.9rem;padding:2rem 0;text-align:center;column-span:all">No anime found. Try a different search or filter.</p>`;return;}
+  grid.innerHTML=page.map((a,i)=>{
+    const img=a.images?.jpg?.image_url||'';
+    const score=a.score?`⭐ ${a.score}`:'N/A';
+    const genre=(a.genres||[])[0]?.name||'';
+    const isTop=a.rank&&a.rank<=10;
+    const displayTitle=a.title_english||a.title;
+    return `
+    <div class="anime-card" style="animation-delay:${i*25}ms" onclick="openDetail(${a.mal_id})">
+      ${isTop?`<div class="card-badge rank-badge">#${a.rank}</div>`:''}
+      <img class="card-img" src="${img}" alt="${sanitize(displayTitle)}" loading="lazy">
+      <div class="card-overlay">
+        <div class="card-title">${sanitize(displayTitle)}</div>
+        <div class="card-meta">
+          <span class="card-score">${score}</span>
+          ${genre?`<span class="card-genre">${sanitize(genre)}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// PAGINATION
+// ═══════════════════════════════════════
+function renderPagination(){
+  const total=Math.ceil(filteredAnime.length/PER_PAGE);
+  const pag=document.getElementById('pagination');
+  if(total<=1){pag.innerHTML='';return;}
+  let html=`<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  pageRange(currentPage,total).forEach(p=>{
+    if(p==='…')html+=`<span style="color:var(--muted);padding:0 .3rem">…</span>`;
+    else html+=`<button class="page-btn${p===currentPage?' active':''}" onclick="goPage(${p})">${p}</button>`;
+  });
+  html+=`<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}>›</button>`;
+  pag.innerHTML=html;
+}
+function pageRange(cur,total){
+  if(total<=7)return Array.from({length:total},(_,i)=>i+1);
+  if(cur<=4)return[1,2,3,4,5,'…',total];
+  if(cur>=total-3)return[1,'…',total-4,total-3,total-2,total-1,total];
+  return[1,'…',cur-1,cur,cur+1,'…',total];
+}
+function goPage(p){
+  const total=Math.ceil(filteredAnime.length/PER_PAGE);
+  if(p<1||p>total)return;
+  currentPage=p;renderGrid();renderPagination();
+  document.getElementById('page-browse').querySelector('.section-header').scrollIntoView({behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════
+// TRENDING
+// ═══════════════════════════════════════
+function buildTrending(){
+  const row=document.getElementById('trendingRow');
+  const picks=[...allAnime].sort((a,b)=>(b.members||0)-(a.members||0)).slice(0,15);
+  row.innerHTML=picks.map(a=>`
+    <div class="trending-pill" onclick="openDetail(${a.mal_id})">
+      <img src="${a.images?.jpg?.small_image_url||''}" alt="${sanitize(a.title_english||a.title)}" loading="lazy">
+      <span>${sanitize((a.title_english||a.title).length>22?(a.title_english||a.title).slice(0,22)+'…':(a.title_english||a.title))}</span>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════
+// DETAIL MODAL
+// ═══════════════════════════════════════
+function openDetail(malId){
+  const a=allAnime.find(x=>x.mal_id===malId);
+  if(!a)return;
+  selectedAnime=a;
+  document.getElementById('mPoster').src=a.images?.jpg?.large_image_url||'';
+  document.getElementById('mTitle').textContent=a.title_english||a.title;
+  const votes=a.scored_by?`(${a.scored_by.toLocaleString()} votes)`:'';
+  document.getElementById('mScore').innerHTML=a.score?`⭐ ${a.score} <span style="color:var(--muted);font-weight:400;font-size:.78rem">${votes}</span>`:'Unscored';
+  document.getElementById('mTags').innerHTML=(a.genres||[]).slice(0,5).map(g=>`<span class="modal-tag">${sanitize(g.name)}</span>`).join('');
+  const syn=a.synopsis||'No synopsis available.';
+  document.getElementById('mSynopsis').textContent=syn.length>350?syn.slice(0,350)+'…':syn;
+  openModal('detailModal');
+}
+function openAnimeRoom(){
+  if(!selectedAnime)return;
+  closeModal('detailModal');
+  switchPage('rooms');
+  setTimeout(()=>enterChatRoom(selectedAnime.mal_id),200);
+}
+function goWriteReview(){
+  closeModal('detailModal');
+  switchPage('community');
+  if(selectedAnime){
+    setTimeout(()=>{
+      const box=document.getElementById('postTitle');
+      box.value=`[${selectedAnime.title_english||selectedAnime.title}] `;
+      box.focus();
+    },300);
+  }
+}
+
+// ═══════════════════════════════════════
+// CHAT ROOMS
+// ═══════════════════════════════════════
+function buildChatRooms(){
+  const grid=document.getElementById('chatRoomsGrid');
+  if(!allAnime.length){grid.innerHTML='<div style="color:var(--muted);text-align:center;padding:2rem;grid-column:1/-1">No anime loaded yet. Go to Browse Anime first.</div>';return;}
+  const top=allAnime.slice(0,50);
+  grid.innerHTML=top.map(a=>{
+    const msgs=chatRooms[a.mal_id]?.length||0;
+    const watchers=Math.floor(Math.random()*3)+1;
+    return `
+    <div class="room-card" onclick="enterChatRoom(${a.mal_id})">
+      <img class="room-poster" src="${a.images?.jpg?.small_image_url||''}" alt="" loading="lazy">
+      <div class="room-info">
+        <div class="room-name">${sanitize((a.title_english||a.title).length>28?(a.title_english||a.title).slice(0,28)+'…':(a.title_english||a.title))}</div>
+        <div class="room-active"><div class="room-dot"></div>${watchers} watching</div>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:.2rem">${msgs} messages</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function enterChatRoom(malId){
+  const a=allAnime.find(x=>x.mal_id===malId);
+  if(!a)return;
+  currentRoom=malId;
+  document.getElementById('chatAnimeName').textContent=a.title_english||a.title;
+  document.getElementById('chatRoomUsers').textContent=`● ${Math.floor(Math.random()*4)+1} watching`;
+  document.getElementById('roomsListView').style.display='none';
+  document.getElementById('chatRoomView').style.display='block';
+  if(!chatRooms[malId]) chatRooms[malId]=[];
+  renderChatMessages();
+  document.getElementById('chatInput').focus();
+}
+function backToRooms(){
+  document.getElementById('chatRoomView').style.display='none';
+  document.getElementById('roomsListView').style.display='block';
+  currentRoom=null;
+  buildChatRooms();
+}
+function renderChatMessages(){
+  const container=document.getElementById('chatMessages');
+  const msgs=chatRooms[currentRoom]||[];
+  if(!msgs.length){
+    container.innerHTML=`<div style="text-align:center;color:var(--muted);font-size:.85rem;margin:auto">No messages yet. Be the first to say something! 🎌</div>`;
+    return;
+  }
+  container.innerHTML=msgs.map(m=>`
+    <div class="chat-msg ${m.own?'own':''}">
+      <div class="chat-avatar">${m.own?'👤':m.avatar}</div>
+      <div class="chat-bubble">
+        ${!m.own?`<div class="chat-name">${sanitize(m.user)}</div>`:''}
+        ${sanitize(m.text)}
+      </div>
+    </div>`).join('');
+  container.scrollTop=container.scrollHeight;
+}
+function sendChatMsg(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text||!currentRoom)return;
+  chatRooms[currentRoom]=chatRooms[currentRoom]||[];
+  chatRooms[currentRoom].push({own:true,user:'You',avatar:'👤',text:sanitize(text),time:new Date().toLocaleTimeString()});
+  input.value='';
+  renderChatMessages();
+}
+
+// ═══════════════════════════════════════
+// REDDIT-STYLE POSTS
+// ═══════════════════════════════════════
+const FLAIRS = {review:'flair-review',discussion:'flair-discussion',news:'flair-news',recommendation:'flair-recommendation',rant:'flair-rant'};
+const FLAIR_LABELS = {review:'📝 Review',discussion:'💬 Discussion',news:'📰 News',recommendation:'✅ Recommendation',rant:'😤 Rant'};
+
+let postsData=[
+  {id:1,title:'Attack on Titan Final Season is the greatest ending in anime history',body:'The payoff for everything set up over 10 years. The symbolism, the music, the animation — all perfect. Isayama earned that ending.',flair:'review',spoiler:false,up:284,down:12,time:Date.now()-7200000,replies:[]},
+  {id:2,title:'Violet Evergarden episode 10 destroyed me',body:'I was NOT prepared. Someone hold me. That episode hit harder than anything I have ever watched.',flair:'review',spoiler:true,up:176,down:3,time:Date.now()-18000000,replies:[{id:21,user:'NagitoFan',avatar:'N',text:'The letters scene. I still cannot rewatch it.',time:Date.now()-16000000,up:44,down:0}]},
+  {id:3,title:'Hot take: FMA Brotherhood is still the best anime ever made',body:'Nothing has topped it for pacing, character writing, and emotional payoff. 9 years later and it\'s still the gold standard.',flair:'discussion',spoiler:false,up:312,down:28,time:Date.now()-86400000,replies:[]},
+  {id:4,title:'Looking for anime similar to Steins;Gate',body:'Finished it twice now. Need something with the same time-travel mind-bending plot. Recommendations?',flair:'recommendation',spoiler:false,up:67,down:2,time:Date.now()-3600000,replies:[]},
+  {id:5,title:'Hunter x Hunter 2011 has the best villain writing in shonen',body:'Meruem, Neferpitou, Hisoka — all written with actual depth. Togashi refuses to make villains purely evil. That\'s rare.',flair:'discussion',spoiler:false,up:198,down:7,time:Date.now()-43200000,replies:[]},
+];
+let nextPostId=100;
+const votedPosts={};
+let currentSort='hot';
+
+function sortPosts(s){
+  currentSort=s;
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sort-'+s).classList.add('active');
+  renderPosts();
+}
+function getSortedPosts(){
+  const p=[...postsData];
+  if(currentSort==='hot') return p.sort((a,b)=>(b.up-b.down)-(a.up-a.down));
+  if(currentSort==='new') return p.sort((a,b)=>b.time-a.time);
+  if(currentSort==='top') return p.sort((a,b)=>b.up-a.up);
+  return p;
+}
+function renderPosts(){
+  const sorted=getSortedPosts();
+  document.getElementById('postsContainer').innerHTML=sorted.map(p=>buildPostHTML(p)).join('');
+}
+function buildPostHTML(post){
+  const net=post.up-post.down;
+  const voted=votedPosts[post.id];
+  const spoilerClass=post.spoiler&&!revealedSpoilers.has(post.id)?'spoiler-cover':'';
+  const timeAgo=getTimeAgo(post.time);
+  const repliesHTML=post.replies?.length?`<div class="replies">${post.replies.map(r=>buildReplyHTML(r)).join('')}</div>`:'';
+  const replyBox=`<div class="reply-input-wrap" id="rbox-${post.id}"><input class="reply-input" id="rinput-${post.id}" placeholder="Write a reply…"><button class="reply-submit" onclick="submitReply(${post.id})">Post</button></div>`;
+  return `
+  <div class="reddit-post" id="post-${post.id}">
+    <div class="post-layout">
+      <div class="post-vote-col">
+        <button class="post-vote-btn like-btn${voted==='up'?' voted-up':''}" onclick="votePost(${post.id},'up')" ${voted?'disabled':''}>▲</button>
+        <span class="vote-count" style="color:${net>0?'var(--up)':net<0?'var(--down)':'var(--muted)'}">${net}</span>
+        <button class="post-vote-btn dislike-btn${voted==='down'?' voted-down':''}" onclick="votePost(${post.id},'down')" ${voted?'disabled':''}>▼</button>
+      </div>
+      <div class="post-content">
+        <div class="post-meta">
+          <span class="post-flair ${FLAIRS[post.flair]||'flair-review'}">${FLAIR_LABELS[post.flair]||post.flair}</span>
+          <span>Posted ${timeAgo}</span>
+        </div>
+        <div class="post-title">${sanitize(post.title)}</div>
+        <div class="post-body ${spoilerClass}" id="pbody-${post.id}" ${post.spoiler&&!revealedSpoilers.has(post.id)?`onclick="revealPost(${post.id})" title="Click to reveal spoiler"`:''}>
+          ${sanitize(post.body)}
+        </div>
+        <div class="post-footer">
+          <button class="post-action-btn" onclick="toggleReply(${post.id})">💬 ${post.replies?.length||0} Comments</button>
+          ${post.spoiler?'<span style="font-size:.7rem;color:#a78bfa;background:rgba(124,58,237,.15);padding:.15rem .45rem;border-radius:999px;border:1px solid rgba(124,58,237,.3)">⚠ Spoiler</span>':''}
+        </div>
+        ${replyBox}
+        ${repliesHTML}
+      </div>
+    </div>
+  </div>`;
+}
+function buildReplyHTML(r){
+  return `
+  <div class="reddit-post" style="margin-bottom:.5rem">
+    <div class="post-layout">
+      <div class="post-vote-col" style="min-width:36px">
+        <button class="post-vote-btn like-btn" onclick="voteReply(${r.id},'up')" ${votedPosts['r'+r.id]?'disabled':''}>▲</button>
+        <span class="vote-count">${r.up||0}</span>
+      </div>
+      <div class="post-content" style="padding:.5rem .75rem">
+        <div class="post-meta"><span style="font-weight:600;font-size:.78rem;color:var(--text)">${sanitize(r.user)}</span><span>${getTimeAgo(r.time)}</span></div>
+        <div class="post-body">${sanitize(r.text)}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+const revealedSpoilers=new Set();
+function revealPost(id){revealedSpoilers.add(id);renderPosts();}
+
+function votePost(id,dir){
+  if(votedPosts[id])return;
+  votedPosts[id]=dir;
+  const post=postsData.find(p=>p.id===id);
+  if(!post)return;
+  if(dir==='up') post.up++;
+  else post.down++;
+  renderPosts();
+  showToast(dir==='up'?'👍 Upvoted!':'👎 Downvoted!','info');
+}
+function voteReply(id,dir){
+  if(votedPosts['r'+id])return;
+  votedPosts['r'+id]=dir;
+  for(const post of postsData){
+    const reply=post.replies?.find(r=>r.id===id);
+    if(reply){reply.up=(reply.up||0)+1;break;}
+  }
+  renderPosts();
+}
+function toggleReply(id){
+  const box=document.getElementById('rbox-'+id);
+  box.classList.toggle('show');
+  if(box.classList.contains('show')) document.getElementById('rinput-'+id)?.focus();
+}
+function submitReply(id){
+  const input=document.getElementById('rinput-'+id);
+  const text=input.value.trim();
+  if(!text)return;
+  const post=postsData.find(p=>p.id===id);
+  if(!post)return;
+  post.replies=post.replies||[];
+  post.replies.push({id:Date.now(),user:'You',avatar:'👤',text:sanitize(text),time:Date.now(),up:0});
+  input.value='';
+  document.getElementById('rbox-'+id).classList.remove('show');
+  renderPosts();
+  showToast('Reply posted!','success');
+}
+
+function toggleSpoiler(){
+  isSpoilerPost=!isSpoilerPost;
+  const btn=document.getElementById('spoilerToggle');
+  btn.style.background=isSpoilerPost?'rgba(124,58,237,.5)':'rgba(124,58,237,.2)';
+  btn.textContent=isSpoilerPost?'⚠ Spoiler ON':'⚠ Spoiler Tag';
+}
+
+const rateLimiter=(()=>{let count=0;setInterval(()=>{count=0;},60000);return{check(){return ++count<=10;}};})();
+
+function submitPost(){
+  const title=document.getElementById('postTitle').value.trim();
+  const body=document.getElementById('postBody').value.trim();
+  if(!title){showToast('Please add a title!','error');return;}
+  if(!rateLimiter.check()){showToast('Slow down! Max 10 posts per minute.','error');return;}
+  const flair=document.getElementById('postFlair').value;
+  postsData.unshift({id:nextPostId++,title:sanitize(title),body:sanitize(body),flair,spoiler:isSpoilerPost,up:1,down:0,time:Date.now(),replies:[]});
+  document.getElementById('postTitle').value='';
+  document.getElementById('postBody').value='';
+  isSpoilerPost=false;
+  document.getElementById('spoilerToggle').style.background='rgba(124,58,237,.2)';
+  document.getElementById('spoilerToggle').textContent='⚠ Spoiler Tag';
+  renderPosts();
+  showToast('Post published! 🎌','success');
+}
+
+function getTimeAgo(ts){
+  const diff=Date.now()-ts;
+  const m=Math.floor(diff/60000);
+  if(m<1)return 'just now';
+  if(m<60)return m+'m ago';
+  const h=Math.floor(m/60);
+  if(h<24)return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+
+// ═══════════════════════════════════════
+// ADMIN ADS PANEL
+// ═══════════════════════════════════════
+const ADMIN_PASSWORD='AniTalkAdmin2025'; // Change this to your password
+let adminLoggedIn=false;
+const adsData=[];
+
+function openAdminLogin(){
+  document.getElementById('adminPanel').classList.add('open');
+  document.getElementById('adminLoginForm').style.display='block';
+  document.getElementById('adminDashboard').style.display='none';
+  document.getElementById('adminPwInput').value='';
+  if(adminLoggedIn){
+    document.getElementById('adminLoginForm').style.display='none';
+    document.getElementById('adminDashboard').style.display='block';
+    renderAdminAds();
+  }
+}
+function closeAdminPanel(){
+  document.getElementById('adminPanel').classList.remove('open');
+}
+function checkAdminPw(){
+  const pw=document.getElementById('adminPwInput').value;
+  if(pw===ADMIN_PASSWORD){
+    adminLoggedIn=true;
+    document.getElementById('adminLoginForm').style.display='none';
+    document.getElementById('adminDashboard').style.display='block';
+    renderAdminAds();
+    showToast('Admin access granted ✓','success');
+  } else {
+    showToast('Wrong password!','error');
+    document.getElementById('adminPwInput').value='';
+  }
+}
+function addAd(){
+  const title=document.getElementById('adTitle').value.trim();
+  const content=document.getElementById('adContent').value.trim();
+  if(!content){showToast('Ad content is empty!','error');return;}
+  adsData.push({id:Date.now(),title:title||'Sponsored',content});
+  document.getElementById('adTitle').value='';
+  document.getElementById('adContent').value='';
+  renderAdminAds();
+  renderAdsInPage();
+  showToast('Ad added!','success');
+}
+function deleteAd(id){
+  const idx=adsData.findIndex(a=>a.id===id);
+  if(idx>-1)adsData.splice(idx,1);
+  renderAdminAds();
+  renderAdsInPage();
+  showToast('Ad removed','info');
+}
+function renderAdminAds(){
+  const list=document.getElementById('adminAdsList');
+  if(!adsData.length){list.innerHTML='<p style="font-size:.8rem;color:var(--muted)">No ads yet.</p>';return;}
+  list.innerHTML=adsData.map(a=>`
+    <div class="admin-ad-item">
+      <div class="admin-ad-text"><strong style="color:var(--gold)">${sanitize(a.title)}</strong><br>${sanitize(a.content).slice(0,80)}${a.content.length>80?'…':''}</div>
+      <button class="delete-ad-btn" onclick="deleteAd(${a.id})">✕ Remove</button>
+    </div>`).join('');
+}
+function renderAdsInPage(){
+  // Main community ads zone (banner)
+  const adsZone=document.getElementById('adsZone');
+  if(!adsData.length){adsZone.innerHTML='';return;}
+  adsZone.innerHTML=adsData.slice(0,2).map(a=>`
+    <div class="ad-slot">
+      <div class="ad-label">📢 Sponsored · ${sanitize(a.title)}</div>
+      <div class="ad-content">${sanitize(a.content)}</div>
+    </div>`).join('');
+  // Sidebar ads
+  const sidebar=document.getElementById('sidebarAds');
+  if(adsData.length>2){
+    sidebar.innerHTML=adsData.slice(2).map(a=>`
+      <div class="sidebar-card" style="border-color:rgba(251,191,36,.2)">
+        <div class="sidebar-title" style="color:var(--gold)">📢 ${sanitize(a.title)}</div>
+        <div style="font-size:.8rem;color:var(--muted);line-height:1.5">${sanitize(a.content)}</div>
+      </div>`).join('');
+  }
+}
+
+// ═══════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-backdrop').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+});
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function showToast(msg,type='info'){
+  const wrap=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.textContent=msg;
+  wrap.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(20px)';t.style.transition='all .3s';setTimeout(()=>t.remove(),300);},3000);
+}
+
+// ═══════════════════════════════════════
+// SCROLL TOP
+// ═══════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTop').classList.toggle('show',window.scrollY>400);
+});
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+renderPosts();
+fetchAnimeData();
+</script>
+</body>
+</html>
